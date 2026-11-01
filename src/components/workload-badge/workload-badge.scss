@@ -1,0 +1,19 @@
+.type-badge {
+  display: inline-block;
+  padding: 4px 7px;
+  border-radius: 5px;
+  font-size: 0.67rem;
+  font-weight: 600;
+}
+.type-cpu {
+  color: #60a5fa;
+  background: rgba(59, 130, 246, 0.1);
+}
+.type-io {
+  color: #fbbf24;
+  background: rgba(245, 158, 11, 0.1);
+}
+.type-mixed {
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.12);
+}

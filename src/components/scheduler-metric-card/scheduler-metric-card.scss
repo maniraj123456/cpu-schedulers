@@ -1,0 +1,96 @@
+.metric-card {
+  position: relative;
+  min-width: 0;
+  padding: 17px;
+  overflow: hidden;
+  background: rgba(15, 23, 42, 0.78);
+  border: 1px solid #1e293b;
+  border-radius: 13px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  transition:
+    border-color 0.18s,
+    transform 0.18s;
+}
+.metric-card:hover {
+  border-color: #475569;
+  transform: translateY(-2px);
+}
+.metric-card-featured {
+  border-color: rgba(139, 92, 246, 0.35);
+  background: linear-gradient(145deg, rgba(76, 29, 149, 0.14), rgba(15, 23, 42, 0.9) 50%);
+}
+.metric-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+h3 {
+  margin: 0;
+  color: #f8fafc;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.optimal-badge {
+  padding: 4px 7px;
+  color: #c4b5fd;
+  background: rgba(139, 92, 246, 0.14);
+  border-radius: 5px;
+  font-size: 0.62rem;
+}
+.metric-list {
+  margin: 0;
+}
+.metric-list div {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(51, 65, 85, 0.44);
+}
+.metric-list div:last-child {
+  border-bottom: 0;
+}
+.metric-list dt {
+  color: #94a3b8;
+  font-size: 0.69rem;
+}
+.metric-list dd {
+  margin: 0;
+  color: #e2e8f0;
+  font:
+    600 0.79rem ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    monospace;
+  white-space: nowrap;
+}
+.metric-list dd small {
+  color: #64748b;
+  font:
+    0.61rem ui-sans-serif,
+    system-ui,
+    sans-serif;
+}
+.metric-list dd.good-value {
+  color: #34d399;
+}
+.metric-list dd.utilization-value {
+  color: #22d3ee;
+}
+.utilization-track {
+  height: 4px;
+  margin-top: 7px;
+  overflow: hidden;
+  background: #080d18;
+  border-radius: 10px;
+}
+.utilization-track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #06b6d4, #3b82f6);
+  border-radius: inherit;
+  transition: width 0.3s;
+}

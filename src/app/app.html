@@ -9,17 +9,11 @@
         </svg>
       </div>
       <div>
-        <h1><span>OS Simulator</span></h1>
+        <h1>Systems Lab <span>OS Simulator</span></h1>
         <p>Compare FCFS, SJF, Round Robin, and CFS scheduling</p>
       </div>
     </div>
-
-    <button
-      class="primary-button run-button"
-      type="button"
-      (click)="runSimulation()"
-      [disabled]="isSimulating() || processes().length === 0"
-    >
+    <button class="primary-button run-button" type="button" (click)="runSimulation()" [disabled]="isSimulating() || processes().length === 0">
       @if (isSimulating()) {
         <span class="spinner" aria-hidden="true"></span>
         Simulating…
@@ -32,199 +26,11 @@
 
   <main>
     <section class="workspace-grid" aria-label="Process setup">
-      <section class="panel process-form-panel">
-        <div class="section-heading">
-          <span class="heading-icon add-icon" aria-hidden="true">+</span>
-          <h2>Add a process</h2>
-        </div>
-
-        <form [formGroup]="processForm" (ngSubmit)="addProcess()">
-          <div class="form-grid">
-            <label class="field">
-              <span>Process ID</span>
-              <input type="text" formControlName="pid" autocomplete="off" placeholder="e.g. P4">
-              @if (processForm.get('pid')?.invalid && processForm.get('pid')?.touched) {
-                <small class="field-error">Enter a process ID.</small>
-              }
-            </label>
-            <label class="field">
-              <span>Arrival time <i>ms</i></span>
-              <input type="number" formControlName="arrival" min="0" step="1">
-            </label>
-            <label class="field">
-              <span>CPU burst <i>ms</i></span>
-              <input type="number" formControlName="cpuBurst" min="1" step="1">
-            </label>
-            <label class="field">
-              <span>I/O burst <i>ms</i></span>
-              <input type="number" formControlName="ioBurst" min="0" step="1">
-            </label>
-          </div>
-
-          <label class="field profile-field">
-            <span>Workload profile</span>
-            <select formControlName="type">
-              <option value="CPU-Bound">CPU-bound — compute intensive</option>
-              <option value="I/O-Bound">I/O-bound — frequent waits</option>
-              <option value="Mixed">Mixed workload</option>
-            </select>
-          </label>
-
-          <button class="secondary-button enqueue-button" type="submit" [disabled]="processForm.invalid">
-            Enqueue process <span aria-hidden="true">↗</span>
-          </button>
-        </form>
-      </section>
-
-      <section class="panel process-list-panel">
-        <div class="panel-heading">
-          <div class="section-heading">
-            <span class="heading-icon queue-icon" aria-hidden="true">≡</span>
-            <h2>Ready queue &amp; processes</h2>
-          </div>
-          <span class="count-badge">{{ processes().length }} total</span>
-        </div>
-
-        @if (processes().length === 0) {
-          <div class="empty-state">
-            <span class="empty-icon" aria-hidden="true">∅</span>
-            <p>No processes in the queue</p>
-            <span>Add a process to get started.</span>
-          </div>
-        } @else {
-          <div class="table-scroll">
-            <table>
-              <thead>
-                <tr>
-                  <th scope="col">Process</th>
-                  <th scope="col">Profile</th>
-                  <th scope="col">Arrival</th>
-                  <th scope="col">CPU</th>
-                  <th scope="col">I/O</th>
-                  <th scope="col"><span class="visually-hidden">Actions</span></th>
-                </tr>
-              </thead>
-              <tbody>
-                @for (p of processes(); track p.pid) {
-                  <tr>
-                    <td>
-                      <span class="process-id">
-                        <span class="process-dot" [style.background-color]="p.color"></span>
-                        {{ p.pid }}
-                      </span>
-                    </td>
-                    <td>
-                      <span class="type-badge" [ngClass]="{
-                        'type-cpu': p.type === 'CPU-Bound',
-                        'type-io': p.type === 'I/O-Bound',
-                        'type-mixed': p.type === 'Mixed'
-                      }">{{ p.type }}</span>
-                    </td>
-                    <td class="numeric-cell">{{ p.arrival }}</td>
-                    <td class="numeric-cell">{{ p.cpuBurst }}</td>
-                    <td class="numeric-cell">{{ p.ioBurst }}</td>
-                    <td class="action-cell">
-                      <button class="icon-button" type="button" (click)="removeProcess(p.pid)" [attr.aria-label]="'Remove process ' + p.pid" title="Remove process">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="m18 6-12 12M6 6l12 12"></path></svg>
-                      </button>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-        }
-      </section>
+      <app-process-form [nextPid]="nextPid()" (processAdded)="addProcess($event)" />
+      <app-process-queue [processes]="processes()" (processRemoved)="removeProcess($event)" />
     </section>
-
-    <section class="panel timeline-panel">
-      <div class="panel-heading timeline-heading">
-        <div class="section-heading">
-          <span class="heading-icon timeline-icon" aria-hidden="true">▥</span>
-          <div>
-            <h2>Execution timeline</h2>
-            <p class="section-subtitle">Illustrative CPU burst layout</p>
-          </div>
-        </div>
-        <div class="scheduler-tabs" role="tablist" aria-label="Scheduler">
-          @for (tab of ['CFS', 'RR', 'SJF', 'FCFS']; track tab) {
-            <button
-              type="button"
-              role="tab"
-              [attr.aria-selected]="activeTab() === tab"
-              [class.selected]="activeTab() === tab"
-              (click)="activeTab.set(tab)"
-            >{{ tab }}</button>
-          }
-        </div>
-      </div>
-
-      <div class="timeline-canvas">
-        @if (!simulationRun()) {
-          <div class="timeline-placeholder">
-            <span class="placeholder-symbol" aria-hidden="true">⌁</span>
-            <p>Run a simulation to view the execution timeline.</p>
-          </div>
-        } @else {
-          @if (processes().length > 0) {
-            <div class="timeline-content">
-              <div class="time-markers" aria-hidden="true">
-                <span>Start</span>
-                <span>CPU burst distribution</span>
-                <span>Finish</span>
-              </div>
-              <div class="timeline-bar" role="img" [attr.aria-label]="'Illustrative CPU burst layout for ' + activeTab()">
-                @for (p of processes(); track p.pid) {
-                  <div class="timeline-segment" [style.flex-grow]="p.cpuBurst" [style.background-color]="p.color" [title]="p.pid + ': ' + p.cpuBurst + ' ms CPU burst'">
-                    <span>{{ p.pid }}</span>
-                  </div>
-                }
-              </div>
-              <div class="timeline-legend">
-                @for (p of processes(); track p.pid) {
-                  <span><i [style.background-color]="p.color"></i>{{ p.pid }}</span>
-                }
-                <span class="io-legend"><i></i>I/O burst listed separately</span>
-              </div>
-            </div>
-          }
-        }
-      </div>
-      <p class="timeline-note">The timeline is illustrative; scheduler metrics below are mock estimates.</p>
-    </section>
-
-    <section class="metrics-section">
-      <div class="metrics-heading">
-        <div>
-          <span class="eyebrow">PERFORMANCE OVERVIEW</span>
-          <h2>Scheduler metrics</h2>
-        </div>
-        <span class="metrics-caption">Compare estimated results across algorithms</span>
-      </div>
-
-      <div class="metrics-grid">
-        @for (metric of displayMetrics(); track metric.name) {
-          <article class="metric-card" [class.metric-card-featured]="metric.name === 'CFS'">
-            <div class="metric-card-top">
-              <h3>{{ metric.name }}</h3>
-              @if (metric.name === 'CFS') {
-                <span class="optimal-badge">Balanced</span>
-              }
-            </div>
-            <dl class="metric-list">
-              <div><dt>Avg. turnaround</dt><dd>{{ metric.turnaroundTime }} <small>ms</small></dd></div>
-              <div><dt>Avg. waiting</dt><dd [class.good-value]="metric.waitingTime < 15">{{ metric.waitingTime }} <small>ms</small></dd></div>
-              <div><dt>Avg. response</dt><dd>{{ metric.responseTime }} <small>ms</small></dd></div>
-              <div><dt>CPU utilization</dt><dd class="utilization-value">{{ metric.cpuUtilization }}<small>%</small></dd></div>
-              <div><dt>Throughput</dt><dd>{{ metric.throughput }} <small>proc/ms</small></dd></div>
-            </dl>
-            <div class="utilization-track" role="progressbar" [attr.aria-valuenow]="metric.cpuUtilization" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="metric.name + ' CPU utilization'">
-              <span [style.width.%]="metric.cpuUtilization"></span>
-            </div>
-          </article>
-        }
-      </div>
-    </section>
+    <app-execution-timeline [processes]="processes()" [simulationRun]="simulationRun()" />
+    <app-scheduler-metrics [metrics]="metrics()" />
   </main>
   <footer class="page-footer">SYSTEMS LAB <span>•</span> CPU SCHEDULER SIMULATOR</footer>
 </div>

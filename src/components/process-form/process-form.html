@@ -1,0 +1,37 @@
+<section class="panel process-form-panel">
+  <app-section-heading title="Add a process" icon="+" tone="add" />
+  <form [formGroup]="form" (ngSubmit)="submit()">
+    <div class="form-grid">
+      <label class="field">
+        <span>Process ID</span>
+        <input type="text" formControlName="pid" autocomplete="off" placeholder="e.g. P4">
+        @if (form.controls.pid.invalid && form.controls.pid.touched) {
+          <small class="field-error">Enter a process ID.</small>
+        }
+      </label>
+      <label class="field">
+        <span>Arrival time <i>ms</i></span>
+        <input type="number" formControlName="arrival" min="0" step="1">
+      </label>
+      <label class="field">
+        <span>CPU burst <i>ms</i></span>
+        <input type="number" formControlName="cpuBurst" min="1" step="1">
+      </label>
+      <label class="field">
+        <span>I/O burst <i>ms</i></span>
+        <input type="number" formControlName="ioBurst" min="0" step="1">
+      </label>
+    </div>
+    <label class="field profile-field">
+      <span>Workload profile</span>
+      <select formControlName="type">
+        <option value="CPU-Bound">CPU-bound — compute intensive</option>
+        <option value="I/O-Bound">I/O-bound — frequent waits</option>
+        <option value="Mixed">Mixed workload</option>
+      </select>
+    </label>
+    <button class="secondary-button" type="submit" [disabled]="form.invalid">
+      Enqueue process <span aria-hidden="true">↗</span>
+    </button>
+  </form>
+</section>

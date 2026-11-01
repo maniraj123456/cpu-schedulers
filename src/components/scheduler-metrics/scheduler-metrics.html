@@ -1,0 +1,14 @@
+<section class="metrics-section">
+  <div class="metrics-heading">
+    <div>
+      <span class="eyebrow">PERFORMANCE OVERVIEW</span>
+      <h2>Scheduler metrics</h2>
+    </div>
+    <span class="metrics-caption">Compare estimated results across algorithms</span>
+  </div>
+  <div class="metrics-grid">
+    @for (metric of metrics; track metric.name) {
+      <app-scheduler-metric-card [metric]="metric" />
+    }
+  </div>
+</section>

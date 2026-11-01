@@ -1,0 +1,18 @@
+<article class="metric-card" [class.metric-card-featured]="metric.name === 'CFS'">
+  <div class="metric-card-top">
+    <h3>{{ metric.name }}</h3>
+    @if (metric.name === 'CFS') {
+      <span class="optimal-badge">Balanced</span>
+    }
+  </div>
+  <dl class="metric-list">
+    <div><dt>Avg. turnaround</dt><dd>{{ metric.turnaroundTime }} <small>ms</small></dd></div>
+    <div><dt>Avg. waiting</dt><dd [class.good-value]="metric.waitingTime < 15">{{ metric.waitingTime }} <small>ms</small></dd></div>
+    <div><dt>Avg. response</dt><dd>{{ metric.responseTime }} <small>ms</small></dd></div>
+    <div><dt>CPU utilization</dt><dd class="utilization-value">{{ metric.cpuUtilization }}<small>%</small></dd></div>
+    <div><dt>Throughput</dt><dd>{{ metric.throughput }} <small>proc/ms</small></dd></div>
+  </dl>
+  <div class="utilization-track" role="progressbar" [attr.aria-valuenow]="metric.cpuUtilization" aria-valuemin="0" aria-valuemax="100" [attr.aria-label]="metric.name + ' CPU utilization'">
+    <span [style.width.%]="metric.cpuUtilization"></span>
+  </div>
+</article>
