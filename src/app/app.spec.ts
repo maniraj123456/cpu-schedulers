@@ -15,10 +15,11 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render the simulator with its example processes', async () => {
     const fixture = TestBed.createComponent(App);
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, cpu-schedulers');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Systems Lab');
+    expect(compiled.querySelectorAll('tbody tr')).toHaveLength(3);
   });
 });
