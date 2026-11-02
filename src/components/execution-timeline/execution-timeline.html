@@ -1,6 +1,6 @@
 <section class="panel timeline-panel">
   <div class="panel-heading timeline-heading">
-    <app-section-heading title="Execution timeline" subtitle="Illustrative CPU burst layout" icon="▥" tone="timeline" />
+    <app-section-heading title="Execution timeline" subtitle="Gantt chart for each scheduling algorithm" icon="▥" tone="timeline" />
     <div class="scheduler-tabs" role="tablist" aria-label="Scheduler">
       @for (tab of schedulers; track tab) {
         <button type="button" role="tab" [attr.aria-selected]="activeTab() === tab" [class.selected]="activeTab() === tab" (click)="activeTab.set(tab)">{{ tab }}</button>
@@ -13,22 +13,33 @@
         <span class="placeholder-symbol" aria-hidden="true">⌁</span>
         <p>Run a simulation to view the execution timeline.</p>
       </div>
-    } @else if (processes.length > 0) {
+    } @else if (activeRun; as run) {
       <div class="timeline-content">
-        <div class="time-markers" aria-hidden="true"><span>Start</span><span>CPU burst distribution</span><span>Finish</span></div>
-        <div class="timeline-bar" role="img" [attr.aria-label]="'Illustrative CPU burst layout for ' + activeTab()">
-          @for (p of processes; track p.pid) {
-            <div class="timeline-segment" [style.flex-grow]="p.cpuBurst" [style.background-color]="p.color" [title]="p.pid + ': ' + p.cpuBurst + ' ms CPU burst'"><span>{{ p.pid }}</span></div>
+        <div class="time-markers" aria-hidden="true"><span>{{ run.segments[0]?.start ?? 0 }} ms</span><span>{{ activeTab() }} CPU execution</span><span>{{ run.segments[run.segments.length - 1]?.end ?? 0 }} ms</span></div>
+        <div class="timeline-bar" role="img" [attr.aria-label]="'Gantt chart for ' + activeTab() + ' scheduling'">
+          @for (segment of run.segments; track $index) {
+            <div
+              class="timeline-segment"
+              [class.idle-segment]="segment.pid === null"
+              [style.flex-grow]="segment.end - segment.start"
+              [style.background-color]="segment.color"
+              [title]="(segment.pid ?? 'Idle') + ': ' + segment.start + '–' + segment.end + ' ms'"
+            >
+              <span>{{ segment.pid ?? 'Idle' }}</span>
+              <small>{{ segment.start }}–{{ segment.end }}</small>
+            </div>
           }
         </div>
         <div class="timeline-legend">
-          @for (p of processes; track p.pid) {
-            <span><i [style.background-color]="p.color"></i>{{ p.pid }}</span>
+          @for (segment of legendSegments; track segment.pid) {
+            <span><i [style.background-color]="segment.color"></i>{{ segment.pid }}</span>
           }
-          <span class="io-legend"><i></i>I/O burst listed separately</span>
+          @if (hasIdleSegment) {
+            <span class="io-legend"><i></i>Idle</span>
+          }
         </div>
       </div>
     }
   </div>
-  <p class="timeline-note">The timeline is illustrative; scheduler metrics below are mock estimates.</p>
+  <p class="timeline-note">Metrics and Gantt segments use the process arrival, CPU burst, I/O time, and Round Robin quantum. I/O starts after each CPU burst; CFS uses equal weights and a 6 ms target latency.</p>
 </section>

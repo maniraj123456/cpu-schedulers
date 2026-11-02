@@ -13,15 +13,21 @@
         <p>Compare FCFS, SJF, Round Robin, and CFS scheduling</p>
       </div>
     </div>
-    <button class="primary-button run-button" type="button" (click)="runSimulation()" [disabled]="isSimulating() || processes().length === 0">
-      @if (isSimulating()) {
-        <span class="spinner" aria-hidden="true"></span>
-        Simulating…
-      } @else {
-        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a.8.8 0 0 0 1.2.69l11.2-7.2a.8.8 0 0 0 0-1.38L8.2 4.11A.8.8 0 0 0 7 4.8Z"></path></svg>
-        Run simulation
-      }
-    </button>
+    <label class="quantum-control" for="round-robin-quantum">
+      <span>RR time quantum</span>
+      <output for="round-robin-quantum">{{ roundRobinQuantum() }} <small>ms</small></output>
+      <input
+        id="round-robin-quantum"
+        type="range"
+        min="1"
+        max="20"
+        step="1"
+        [value]="roundRobinQuantum()"
+        [attr.aria-valuetext]="roundRobinQuantum() + ' milliseconds'"
+        aria-label="Round Robin time quantum"
+        (input)="setRoundRobinQuantum($event)"
+      >
+    </label>
   </header>
 
   <main>
@@ -29,8 +35,13 @@
       <app-process-form [nextPid]="nextPid()" (processAdded)="addProcess($event)" />
       <app-process-queue [processes]="processes()" (processRemoved)="removeProcess($event)" />
     </section>
-    <app-execution-timeline [processes]="processes()" [simulationRun]="simulationRun()" />
-    <app-scheduler-metrics [metrics]="metrics()" />
+    <app-execution-timeline [schedulerRuns]="schedulerRuns()" [simulationRun]="simulationRun()" />
+    <app-scheduler-metrics
+      [metrics]="metrics()"
+      [isSimulating]="isSimulating()"
+      [canRunSimulation]="processes().length > 0"
+      (runSimulation)="runSimulation()"
+    />
   </main>
   <footer class="page-footer">SYSTEMS LAB <span>•</span> CPU SCHEDULER SIMULATOR</footer>
 </div>

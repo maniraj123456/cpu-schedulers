@@ -4,7 +4,18 @@
       <span class="eyebrow">PERFORMANCE OVERVIEW</span>
       <h2>Scheduler metrics</h2>
     </div>
-    <span class="metrics-caption">Compare estimated results across algorithms</span>
+    <div class="metrics-actions">
+      <span class="metrics-caption">Compare calculated results across algorithms</span>
+      <button class="run-button" type="button" (click)="runSimulation.emit()" [disabled]="isSimulating || !canRunSimulation">
+        @if (isSimulating) {
+          <span class="spinner" aria-hidden="true"></span>
+          Simulating…
+        } @else {
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 4.8v14.4a.8.8 0 0 0 1.2.69l11.2-7.2a.8.8 0 0 0 0-1.38L8.2 4.11A.8.8 0 0 0 7 4.8Z"></path></svg>
+          Run simulation
+        }
+      </button>
+    </div>
   </div>
   <div class="metrics-grid">
     @for (metric of metrics; track metric.name) {

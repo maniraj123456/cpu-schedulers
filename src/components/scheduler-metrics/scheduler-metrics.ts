@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { SchedulerMetrics } from '../../models/scheduler.models';
 import { SchedulerMetricCardComponent } from '../scheduler-metric-card/scheduler-metric-card';
 
@@ -12,4 +12,7 @@ import { SchedulerMetricCardComponent } from '../scheduler-metric-card/scheduler
 })
 export class SchedulerMetricsComponent {
   @Input() metrics: SchedulerMetrics[] = [];
+  @Input() isSimulating = false;
+  @Input() canRunSimulation = false;
+  @Output() runSimulation = new EventEmitter<void>();
 }

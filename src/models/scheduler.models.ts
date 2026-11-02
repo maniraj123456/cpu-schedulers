@@ -19,3 +19,17 @@ export interface SchedulerMetrics {
   cpuUtilization: number;
   throughput: number;
 }
+
+export type SchedulerName = 'FCFS' | 'SJF' | 'RR' | 'CFS';
+
+export interface GanttSegment {
+  pid: string | null;
+  start: number;
+  end: number;
+  color: string;
+}
+
+export interface SchedulerRun {
+  metrics: SchedulerMetrics;
+  segments: GanttSegment[];
+}

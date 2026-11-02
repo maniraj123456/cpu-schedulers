@@ -8,6 +8,55 @@
   gap: 15px;
   margin-bottom: 14px;
 }
+.metrics-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.run-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 10px 15px;
+  color: #f8fafc;
+  background: linear-gradient(110deg, #0891b2, #2563eb);
+  border: 1px solid transparent;
+  border-radius: 9px;
+  box-shadow: 0 8px 24px rgba(8, 145, 178, 0.16);
+  font: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 0.18s,
+    transform 0.18s;
+}
+.run-button:hover:not(:disabled) {
+  background: linear-gradient(110deg, #06b6d4, #3b82f6);
+  transform: translateY(-1px);
+}
+.run-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.46;
+}
+.run-button svg {
+  width: 17px;
+  height: 17px;
+}
+.spinner {
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 .eyebrow {
   color: #64748b;
   font-size: 0.62rem;
@@ -38,6 +87,13 @@ h2 {
   .metrics-heading {
     align-items: flex-start;
     flex-direction: column;
+  }
+  .metrics-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .run-button {
+    width: 100%;
   }
   .metrics-grid {
     grid-template-columns: 1fr;
